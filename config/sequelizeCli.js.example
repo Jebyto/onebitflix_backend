@@ -1,0 +1,10 @@
+module.exports = {
+    development: {
+        dialect: 'postgres',
+        host: 'DB_HOST',
+        port: 5432,
+        username: 'DB_USER',
+        password: 'DB_PASSWORD',
+        database: 'DB_NAME'
+    }
+}
