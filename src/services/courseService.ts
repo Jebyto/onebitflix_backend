@@ -43,5 +43,13 @@ export const courseService = {
         })
 
         return featuredCourses;
+    },
+    getTopTenNewest: async () => {
+        const courses = await Course.findAll({
+            limit: 10,
+            order: [['created_at', 'DESC']]
+          })
+      
+          return courses;
     }
 }
