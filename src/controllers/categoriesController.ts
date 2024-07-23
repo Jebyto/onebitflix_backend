@@ -18,6 +18,19 @@ export const categoriesController = {
                 return res.status(400).json({ message: error.message });
             }
         }
+    },
+    show: async (req: Request, res: Response) => {
+        const { id } = req.params;
 
+        try {
+            const category = await categoryService.findByIdWithCourses(id);
+            return res.json(category);
+        } catch (error) {
+            if (error instanceof Error) {
+                console.error(error);
+
+                return res.status(400).json({ message: error.message });
+            }
+        }
     }
 }
