@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import { sequelize } from "../database";
 import { Course } from "../models"
 
@@ -26,7 +27,6 @@ export const courseService = {
 
         return courseWithEpisodes;
     },
-
     getRandomFeaturedCourses: async () => {
         const featuredCourses = await Course.findAll({
             where: {
@@ -51,5 +51,31 @@ export const courseService = {
           })
       
           return courses;
+    },
+    findByName: async (name: string, page: number, perPage: number) => {
+        const offset = (page - 1) * perPage;
+
+        const { count,  rows } = await Course.findAndCountAll({ 
+            attributes: [
+                "id",
+                "name",
+                "synopsis",
+                ["thumbnail_url", "thumbnailUrl"]
+            ],
+            where: {
+                name: {
+                    [Op.iLike]: `%${name}%`
+                }
+            },
+            limit: perPage,
+            offset
+        })
+
+        return { 
+            courses: rows,
+            page,
+            perPage,
+            total: count
+         };
     }
 }
