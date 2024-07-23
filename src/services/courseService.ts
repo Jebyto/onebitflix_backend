@@ -1,3 +1,4 @@
+import { sequelize } from "../database";
 import { Course } from "../models"
 
 export const courseService = {
@@ -10,12 +11,12 @@ export const courseService = {
                 ["thumbnail_url", "thumbnailUrl"]
             ],
             include: [{
-                association: "Episodes",
-                attributes: ["id", 
-                    "name", 
-                    "synopsis", 
-                    "order", 
-                    ["video_url", "videoUrl"], 
+                association: "episodes",
+                attributes: ["id",
+                    "name",
+                    "synopsis",
+                    "order",
+                    ["video_url", "videoUrl"],
                     ["seconds_long", "secondsLong"]
                 ],
                 order: [["order", "ASC"]],
@@ -24,5 +25,23 @@ export const courseService = {
         })
 
         return courseWithEpisodes;
+    },
+
+    getRandomFeaturedCourses: async () => {
+        const featuredCourses = await Course.findAll({
+            where: {
+                featured: true
+            },
+            attributes: [
+                "id",
+                "name",
+                "synopsis",
+                ["thumbnail_url", "thumbnailUrl"]
+            ],
+            order: [sequelize.fn("RANDOM")],
+            limit: 3
+        })
+
+        return featuredCourses;
     }
 }
