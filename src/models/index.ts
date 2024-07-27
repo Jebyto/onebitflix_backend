@@ -3,6 +3,7 @@ import { Course } from "./Course";
 import { Episode } from "./Episode";
 import { User } from "./User";
 import { Favorite } from "./Favorite";
+import { Like } from "./Like";
 
 // Categoria - Curso
 Category.hasMany(Course, { as: 'courses' });
@@ -20,10 +21,15 @@ Favorite.belongsTo(Course);
 User.hasMany(Favorite, { as: 'FavoritesCourses', foreignKey: 'user_id'});
 Favorite.belongsTo(User);
 
+// Usuário - Like - Curso
+Course.belongsToMany(User, { through: Like });
+User.belongsToMany(Course, { through: Like });
+
 export {
     Category,
     Course,
     Episode,
     User,
     Favorite,
+    Like,
 }
