@@ -18,4 +18,21 @@ export const likesController = {
             }
         }
     },
+    // DELETE /likes/:id
+    delete: async (req: AuthenticatedRequest, res: Response) => {
+        const userId = req.user!.id;
+        const { id } = req.params;
+        
+        try {
+            const courseId = Number(id);
+            
+            await likeService.delete(userId, courseId);
+            return res.status(204).send();
+            
+        } catch (error) {
+            if(error instanceof Error) {
+                return res.status(400).json({ message: error.message });
+            }
+        }
+    }
 }
