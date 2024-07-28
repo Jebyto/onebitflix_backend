@@ -22,6 +22,8 @@ router.get('/courses/popular', ensureAuth, coursesController.popular);
 router.get('/courses/:id', ensureAuth, coursesController.show);
 
 router.get('/episodes/stream', ensureAuthViaQuery, episodesController.stream);
+router.get('/episodes/:id/watchTime', ensureAuth, episodesController.getWatchTime);
+router.post('/episodes/:id/watchTime', ensureAuth, episodesController.setWatchTime);
 
 router.post('/favorites', ensureAuth, FavoritesController.save);
 router.get('/favorites', ensureAuth, FavoritesController.index);

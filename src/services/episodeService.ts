@@ -1,6 +1,8 @@
 import { Response } from "express";
 import fs from "fs";
 import path from "path";
+import { WatchTime } from "../models/index";
+import { WatchTimeAttributes } from "../models/WatchTime";
 
 export const episodeService = {
     streamEpisodeToResponse: (res: Response, videoUrl: string, range: string | undefined) => {
@@ -11,7 +13,7 @@ export const episodeService = {
         if (range) {
             const parts = range.replace(/bytes=/, "").split("-");
             const start = parseInt(parts[0], 10);
-            const end = parts[1]? parseInt(parts[1], 10) : fileStat.size - 1;
+            const end = parts[1] ? parseInt(parts[1], 10) : fileStat.size - 1;
 
             const chunkSize = (end - start) + 1;
 
@@ -19,14 +21,14 @@ export const episodeService = {
                 start,
                 end
             });
-            
+
             const head = {
                 'Content-Range': `bytes ${start}-${end}/${fileStat.size}`,
                 'Accept-Ranges': 'bytes',
                 'Content-Length': chunkSize,
                 'Content-Type': 'video/mp4'
             }
-            
+
             res.writeHead(206, head);
 
             file.pipe(res);
@@ -35,10 +37,37 @@ export const episodeService = {
                 'Content-Length': fileStat.size,
                 'Content-Type': 'video/mp4'
             }
-            
+
             res.writeHead(200, head);
 
             fs.createReadStream(filePath).pipe(res);
         }
+    },
+    getWatchTime: async (userId: number, episodeId: number) => {
+        const watchTime = await WatchTime.findOne({
+            where: { userId, episodeId },
+            attributes: ["seconds"]
+        })
+
+        return watchTime;
+    },
+    setWatchTime: async ({ userId, episodeId, seconds }: WatchTimeAttributes) => {
+        const watchTimeExists = await WatchTime.findOne({ 
+            where: { userId, episodeId }
+        });
+
+        if(watchTimeExists) {
+            watchTimeExists.seconds = seconds;
+            await watchTimeExists.save();
+            return watchTimeExists;
+        }
+
+        const watchTime = await WatchTime.create({
+            userId,
+            episodeId,
+            seconds
+        });
+
+        return watchTime;
     }
 }
