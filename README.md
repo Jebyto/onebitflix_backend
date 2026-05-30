@@ -1,6 +1,6 @@
 # OneBitFlix Backend
 
-Backend do **OneBitFlix**, uma plataforma estilo Netflix para cursos. Este projeto fornece a API consumida pelo projeto `onebitflix_frontend` e inclui um painel administrativo com AdminJS para gerenciar categorias, cursos, aulas e usuários.
+Backend do **OneBitFlix**, uma plataforma estilo Netflix para cursos. Este projeto fornece a API consumida pelo projeto [`onebitflix_frontend`](https://github.com/Jebyto/onebitflix_frontend), e inclui um painel administrativo com AdminJS para gerenciar categorias, cursos, aulas e usuários.
 
 ## Tecnologias
 
